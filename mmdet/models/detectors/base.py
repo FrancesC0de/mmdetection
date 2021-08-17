@@ -245,7 +245,7 @@ class BaseDetector(nn.Module, metaclass=ABCMeta):
         assert len(img_metas[0]) == imgs_per_gpu, f'img_metas={img_metas}'
         img_metas[0][0]['img_shape'] = img_shape[2:4]
 
-        retval = self.simple_test(imgs[0], img_metas[0], postprocess=False)
+        retval = self.simple_test(imgs[0], img_metas[0]) #, postprocess=False)
         return retval
 
     @contextmanager
@@ -486,4 +486,9 @@ class BaseDetector(nn.Module, metaclass=ABCMeta):
 
     def export(self, img, img_metas, **kwargs):
         with self.forward_export_context(img_metas):
+            '''
+            print('\n\n\n\n\n\n')
+            print(type(self), type(img), kwargs)
+            print('\n\n\n\n\n\n')
+            '''
             torch.onnx.export(self, img, **kwargs)
